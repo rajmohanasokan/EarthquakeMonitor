@@ -1,25 +1,25 @@
-unfolding_app_template and UC San Diego/Coursera MOOC starter code
-==================================================================
+/-------------------------------------------------------------------------
+/ 
+/ Java Programming: Object Oriented Design of 
+/ Data Structures Specialization:
+/
+/ Object Oriented Programming in Java
+/ 
+/-------------------------------------------------------------------------
 
-This is a skeleton to use Unfolding in Eclipse as well as some starter
-code for the Object Oriented Programming in Java course offered by 
-UC San Diego through Coursera.
+---------------------------------------------------------[ DESCRIPTION ]--
 
-A very basic Unfolding demo you'll find in the source folder in the default package. 
-For more examples visit http://unfoldingmaps.org, or download the template with
-examples.
+This project, when compiled and run, renders earthquake data from a live RSS feed,
+http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom, on a map, categorized based
+on their epicentre, type (land quake vs ocean quake) and magnitude.
 
-The module folders contain the starter code for the programming assignments
-associated with the MOOC.
+---------------------------------------------------------------[ SETUP ]-- 
 
-Get excited and make things!
-
-
-INSTALLATION
-
-Import this folder in Eclipse ('File' -> 'Import' -> 'Existing Projects into
-Workspace', Select this folder, 'Finish')
-
+Importing Project into eclipse:
+	1. Create a new Java Project in your workspace
+	2. Import the files:
+	  File -> Import -> Select "File System" -> Next -> Browse and set 
+	  root directory to folder contents of zip were extracted to -> Finish
 
 MANUAL INSTALLATION
 
