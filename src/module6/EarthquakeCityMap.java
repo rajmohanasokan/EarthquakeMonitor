@@ -2,6 +2,7 @@ package module6;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
@@ -12,6 +13,7 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.AbstractShapeMarker;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
+import de.fhpotsdam.unfolding.providers.EsriProvider;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
 import de.fhpotsdam.unfolding.utils.MapUtils;
@@ -73,7 +75,7 @@ public class EarthquakeCityMap extends PApplet {
 		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+			map = new UnfoldingMap(this, 200, 50, 650, 600, new EsriProvider.WorldStreetMap());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 		    //earthquakesURL = "2.5_week.atom";
 		}
@@ -81,8 +83,8 @@ public class EarthquakeCityMap extends PApplet {
 		
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
-		//earthquakesURL = "test1.atom";
-		//earthquakesURL = "test2.atom";
+//		earthquakesURL = "test1.atom";
+		earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
 		//earthquakesURL = "quiz2.atom";
@@ -124,6 +126,8 @@ public class EarthquakeCityMap extends PApplet {
 	    map.addMarkers(quakeMarkers);
 	    map.addMarkers(cityMarkers);
 	    
+	    sortAndPrint(10);
+	    
 	    
 	}  // End setup
 	
@@ -139,6 +143,15 @@ public class EarthquakeCityMap extends PApplet {
 	// TODO: Add the method:
 	//   private void sortAndPrint(int numToPrint)
 	// and then call that method from setUp
+	private void sortAndPrint(int numToPrint) {
+		EarthquakeMarker[] earthquakeArr = new EarthquakeMarker[quakeMarkers.size()];
+		earthquakeArr = quakeMarkers.toArray(earthquakeArr);
+		Arrays.sort(earthquakeArr);
+		int iterSize = (earthquakeArr.length < numToPrint)? earthquakeArr.length : numToPrint;
+		for(int i = 0; i < iterSize; i++) {
+			System.out.println(earthquakeArr[i].getTitle() + ", " + earthquakeArr[i].getMagnitude());
+		}
+	}
 	
 	/** Event handler that gets called automatically when the 
 	 * mouse moves.
