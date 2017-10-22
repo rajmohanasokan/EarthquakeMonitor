@@ -68,6 +68,10 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 		drawEarthquake(pg, x, y);
 		
 		// OPTIONAL TODO: draw X over marker if within past day		
+		if(((String) getProperty("age")).equals("Past Day")) {
+			pg.line(x-radius, y-radius, x+radius, y+radius);
+			pg.line(x-radius, y+radius, x+radius, y-radius);
+		}
 		
 		// reset to previous styling
 		pg.popStyle();
@@ -80,6 +84,15 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 	// You might find the getters below helpful.
 	private void colorDetermine(PGraphics pg) {
 		//TODO: Implement this method
+		if (getDepth() < 70 ){
+			pg.fill(255, 255, 0);
+		}
+		else if (getDepth() >= 70 && getDepth() < 300){
+			pg.fill(0, 0, 255);
+		}
+		else {
+			pg.fill(255, 0, 0);
+		}
 	}
 	
 	
