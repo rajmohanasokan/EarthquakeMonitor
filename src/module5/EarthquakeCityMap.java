@@ -11,6 +11,7 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.AbstractShapeMarker;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
+import de.fhpotsdam.unfolding.providers.EsriProvider;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
 import de.fhpotsdam.unfolding.utils.MapUtils;
@@ -70,9 +71,9 @@ public class EarthquakeCityMap extends PApplet {
 		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+			map = new UnfoldingMap(this, 200, 50, 650, 600, new EsriProvider.WorldStreetMap());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
-		    //earthquakesURL = "2.5_week.atom";
+		    earthquakesURL = "2.5_week.atom";
 		}
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
@@ -146,6 +147,15 @@ public class EarthquakeCityMap extends PApplet {
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
 		// TODO: Implement this method
+		if(lastSelected == null) {
+			for(Marker marker : markers) {
+				if(marker.isInside(map, mouseX, mouseY)) {
+					lastSelected = (CommonMarker) marker;
+					lastSelected.setSelected(true);	
+					break;
+				}
+			}
+		}		
 	}
 	
 	/** The event handler for mouse clicks
@@ -159,6 +169,54 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+		if(lastClicked != null) {
+			unhideMarkers();
+			lastClicked = null;
+		}
+		else {
+			displayMarkersWithinThreatCircle();
+		}
+		
+	}
+	
+	private void displayMarkersWithinThreatCircle() {
+		for(Marker marker : quakeMarkers) {
+			if(marker.isInside(map, mouseX, mouseY)) {
+				hideMarkers();
+				marker.setHidden(false);
+				double threatDistance = ((EarthquakeMarker) marker).threatCircle();
+				lastClicked = (CommonMarker) marker;				
+				showCitiesWithinThreat(marker.getLocation(), threatDistance);
+				break;
+			}
+		}
+		if(lastClicked == null) {
+			for(Marker marker : cityMarkers) {
+				if(marker.isInside(map, mouseX, mouseY)) {
+					hideMarkers();
+					marker.setHidden(false);
+					lastClicked = (CommonMarker) marker;				
+					showEarthquakesWithinReach(marker.getLocation());
+					break;
+				}
+			}
+		}
+	}
+	
+	private void showEarthquakesWithinReach(Location location) {
+		for(Marker marker : quakeMarkers) {
+			if(marker.getDistanceTo(location) <= ((EarthquakeMarker) marker).threatCircle()) {
+				marker.setHidden(false);
+			}
+		}
+	}
+	
+	private void showCitiesWithinThreat(Location location, double threatDistance) {		
+		for(Marker marker : cityMarkers) {
+			if(marker.getDistanceTo(location) <= threatDistance) {
+				marker.setHidden(false);
+			}
+		}				
 	}
 	
 	
@@ -170,6 +228,15 @@ public class EarthquakeCityMap extends PApplet {
 			
 		for(Marker marker : cityMarkers) {
 			marker.setHidden(false);
+		}
+	}
+	private void hideMarkers() {
+		for(Marker marker : quakeMarkers) {
+			marker.setHidden(true);
+		}
+			
+		for(Marker marker : cityMarkers) {
+			marker.setHidden(true);
 		}
 	}
 	
